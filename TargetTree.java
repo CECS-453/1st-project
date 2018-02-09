@@ -14,8 +14,6 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import static pkg534p1.VCS.getChecksum;
-import static pkg534p1.VCS.makeDirectory;
 
 /**
  *
@@ -34,7 +32,7 @@ public class TargetTree {
         }
     }
     public static void copyFolder(File srcFolderPath, File destFolderPath, String sourceFolderName,
-        ArrayList<String> fileAIDPaths) throws IOException {
+        ArrayList<String> filePaths) throws IOException {
         if (!srcFolderPath.isDirectory()) {
         // If it is a File the Just copy it to the new Folder
             InputStream in = new FileInputStream(srcFolderPath);
@@ -60,21 +58,21 @@ public class TargetTree {
             }
             String folder_contents[] = srcFolderPath.list();
 
-        // List of all the AID path to be added to the manifest file
+        // List of all the path to be added to the manifest file
             for (String file : folder_contents) {
                 makeDirectory(destRepoPath + "/" + file);
                 File source = new File(srcFolderPath, file);
         // If the folder has folders in it, recursive copy the folder
                 if (source.isDirectory()) {
                     File inFolderDir = new File(destFolderPath + "/" + sourceFolderName);
-                    copyFolder(source, inFolderDir, source.getName(), fileAIDPaths);
+                    copyFolder(source, inFolderDir, source.getName(), filePaths);
                 } else {
             // Generate Checksum
-                    File destination = new File(destRepoPath, file + "/" + (int) getChecksum(source));
+                    File destination = new File(destRepoPath, file + "/" + "checksum coming");
             // Add file path to ArrayList to be added to manifest file
                     fileAIDPaths.add(destination.toString());
             // Copy each file
-                    copyFolder(source, destination, sourceFolderName, fileAIDPaths);
+                    copyFolder(source, destination, sourceFolderName, filePaths);
                 }
             }
         }
